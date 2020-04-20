@@ -23,3 +23,6 @@ export default function Episodes(props) {
     </div>
   );
 }
+///prop states?
+//error
+//no error
