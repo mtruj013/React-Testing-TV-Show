@@ -2,12 +2,13 @@ import React from 'react';
 import parse from 'html-react-parser';
 
 export default function Episodes(props) {
+  // console.log("episodes props", props)
   return (
-    <div className="episodes">
+    <div className="episodes" data-testid="episode">
       {props.episodes.map(e => (
-        <div className="episode" key={e.id}>
+        <div className="episode"  key={e.id}>
           {e.image && (
-            <img className="episode-image" src={e.image.medium} alt={e.name} />
+            <img className="episode-image"  src={e.image.medium} alt={e.name} />
           )}
           <div className="episode-info">
             <p className="episode-number">

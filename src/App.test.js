@@ -1,8 +1,15 @@
 import React from 'react'
-import { render } from '@testing-library/react'
-import Episodes from "./Episodes"
+import { render, waitFor, getByPlaceholderText} from '@testing-library/react'
+import App from './App'
+import { fetchShow  as mockFetchShow} from './api/fetchShow'
+import {userEvent } from '@testing-library/user-event'
 
-const episodesData = [
+//mock fetchshow
+jest.mock("./api/fetchShow");
+// console.log(mockFetchShow)
+
+const episodesData = {
+    data: [
     {
         "id": 2993,
         "url": "http://www.tvmaze.com/shows/2993/stranger-things",
@@ -601,24 +608,15 @@ const episodesData = [
             ]
         }
     }
-]
+]}
 
-//1. test render
-test('Episodes component renders', () => {
-    render(<Episodes episodes={[]} />)//need to include episodes or will thorw error
-})
 
-//2. rerender to test after props have been updated
-test('rerenders with updated props', () => {
-    const { rerender, debug, getAllByTestId } = render(<Episodes episodes={[]} />);//renders component
+test('renders data when dropdown button is clicked ', async() => {
+    mockFetchShow.mockResolvedValueOnce(episodesData);
 
-    rerender(<Episodes episodes={episodesData} />)//passes props
+    const {getByDisplayValue, queryAllByTestId} = render(<App/>)
+    const dropdown = getByDisplayValue(/Select a season/i)
+    userEvent.click(dropdown);
 
-    //query for episodes
-    const episodes =  getAllByTestId(/episode/i);
-    // console.log(episodes);
-
-    //assert that they are in the
-    expect(episodes).toHaveLength(1)
-}) 
-
+   await waitFor(() => queryAllByTestId(/episode/i).toHaveLength(3))
+});
